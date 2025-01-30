@@ -1,8 +1,14 @@
 package config
 
-import "strings"
+import (
+	"log"
+	"strings"
+)
 
-func parsePorts(portStr string) []string {
+// Parse and split a list of key:value provided in the following forms :
+// input: key1:value1;key2:value2;key3:value3
+// output: ["key1:value1", "key2:value2", "key3:value3"]
+func parseKeyValuePairs(portStr string) []string {
 	if portStr == "" {
 		return []string{}
 	}
@@ -18,4 +24,20 @@ func parsePorts(portStr string) []string {
 	}
 
 	return result
+}
+
+// parseBoolEnv parses a string environment variable into a boolean value.
+// Accepted values for true: "true", "yes", "True", "TRUE"
+// Accepted values for false: "false", "no", "False", "FALSE", "" (empty string)
+// Any other value causes the program to exit with an error.
+func parseBoolEnv(value string) bool {
+	switch strings.ToLower(strings.TrimSpace(value)) {
+	case "true", "yes":
+		return true
+	case "false", "no", "":
+		return false
+	default:
+		log.Fatalf("Invalid boolean value for ROLENV_PRIVILEGED: %s. Expected true/false or yes/no.", value)
+		return false // Unreachable, but required for compilation
+	}
 }

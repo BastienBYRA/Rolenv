@@ -14,18 +14,26 @@ func LoadConfig(filename string) (*docker.ContainerConfig, error) {
 		filename = ".env"
 	}
 
+	// Ensure we can read the file
 	envMap, err := godotenv.Read(filename)
 	if err != nil {
 		return nil, fmt.Errorf("error loading .env file: %w", err)
 	}
 
+	// Generate the container configuration from it
+	checkEnvNotNull := utils.CheckEnvNotNullFromEnvFile(envMap)
 	config := &docker.ContainerConfig{
-		Image:   utils.CheckEnvNotNull(envMap, "ROLENV_IMAGE"),
-		Version: utils.CheckEnvNotNull(envMap, "ROLENV_VERSION"),
-		Ports:   parsePorts(envMap["ROLENV_PORT"]),
+		Name:       checkEnvNotNull("ROLENV_NAME"),
+		Image:      checkEnvNotNull("ROLENV_IMAGE"),
+		Version:    checkEnvNotNull("ROLENV_VERSION"),
+		Ports:      parseKeyValuePairs(envMap["ROLENV_PORT"]),
+		Network:    envMap["ROLENV_NETWORK"],
+		Hosts:      parseKeyValuePairs(envMap["ROLENV_HOSTS"]),
+		Entrypoint: envMap["ROLENV_ENTRYPOINT"],
+		Command:    envMap["ROLENV_COMMAND"],
+		Hostname:   envMap["ROLENV_HOSTNAME"],
+		Privileged: parseBoolEnv(envMap["ROLENV_PRIVILEGED"]),
 	}
-
-	fmt.Print(config)
 
 	return config, nil
 }
