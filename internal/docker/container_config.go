@@ -5,12 +5,11 @@ import "github.com/bastienbyra/rolenv/internal/docker/enums"
 type ContainerConfig struct {
 	Name          string
 	Image         string
-	Version       string
 	Ports         []string
 	Network       string
 	Hosts         []string // --add-host
-	Entrypoint    string
-	Command       string
+	Entrypoint    []string
+	Command       []string
 	Hostname      string
 	Privileged    bool
 	RestartPolicy enums.RestartPolicy

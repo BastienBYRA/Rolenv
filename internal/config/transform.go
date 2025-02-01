@@ -6,8 +6,10 @@ import (
 )
 
 // Parse and split a list of key:value provided in the following forms :
-// input: key1:value1;key2:value2;key3:value3
-// output: ["key1:value1", "key2:value2", "key3:value3"]
+// Example:
+//
+//	input: key1:value1;key2:value2;key3:value3
+//	output: ["key1:value1", "key2:value2", "key3:value3"]
 func parseKeyValuePairs(portStr string) []string {
 	if portStr == "" {
 		return []string{}
@@ -40,4 +42,28 @@ func parseBoolEnv(value string) bool {
 		log.Fatalf("Invalid boolean value for ROLENV_PRIVILEGED: %s. Expected true/false or yes/no.", value)
 		return false // Unreachable, but required for compilation
 	}
+}
+
+// parseStringList parses a delimited string into a slice of strings.
+// The input string consists of values separated by ";".
+// Example:
+//
+//	input:  "apple;banana;cherry"
+//	output: ["apple", "banana", "cherry"]
+func parseList(inputStr string) []string {
+	if inputStr == "" {
+		return []string{}
+	}
+
+	// Split the input string by ";" separator
+	items := strings.Split(inputStr, ";")
+	var result []string
+
+	// Trim spaces and add each item to the result slice
+	for _, item := range items {
+		item = strings.TrimSpace(item)
+		result = append(result, item)
+	}
+
+	return result
 }

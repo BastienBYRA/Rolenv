@@ -25,12 +25,11 @@ func LoadConfig(filename string) (*docker.ContainerConfig, error) {
 	config := &docker.ContainerConfig{
 		Name:       checkEnvNotNull("ROLENV_NAME"),
 		Image:      checkEnvNotNull("ROLENV_IMAGE"),
-		Version:    checkEnvNotNull("ROLENV_VERSION"),
 		Ports:      parseKeyValuePairs(envMap["ROLENV_PORT"]),
 		Network:    envMap["ROLENV_NETWORK"],
 		Hosts:      parseKeyValuePairs(envMap["ROLENV_HOSTS"]),
-		Entrypoint: envMap["ROLENV_ENTRYPOINT"],
-		Command:    envMap["ROLENV_COMMAND"],
+		Entrypoint: parseList(envMap["ROLENV_ENTRYPOINT"]),
+		Command:    parseList(envMap["ROLENV_COMMAND"]),
 		Hostname:   envMap["ROLENV_HOSTNAME"],
 		Privileged: parseBoolEnv(envMap["ROLENV_PRIVILEGED"]),
 	}
