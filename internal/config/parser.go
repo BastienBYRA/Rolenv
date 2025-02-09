@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"strconv"
 	"strings"
 )
 
@@ -44,7 +45,7 @@ func parseBoolEnv(value string) bool {
 	}
 }
 
-// parseStringList parses a delimited string into a slice of strings.
+// parseList parses a delimited string into a slice of strings.
 // The input string consists of values separated by ";".
 // Example:
 //
@@ -66,4 +67,19 @@ func parseList(inputStr string) []string {
 	}
 
 	return result
+}
+
+// parsePositiveNumber converts a string to an integer.
+// If the input is empty, non-numeric, or negative, it returns -1.
+func parsePositiveNumber(value string) int {
+	if value == "" {
+		return -1
+	}
+
+	number, err := strconv.Atoi(value)
+	if err != nil || number < 0 {
+		return -1
+	}
+
+	return number
 }

@@ -23,15 +23,16 @@ func LoadConfig(filename string) (*docker.ContainerConfig, error) {
 	// Generate the container configuration from it
 	checkEnvNotNull := utils.CheckEnvNotNullFromEnvFile(envMap)
 	config := &docker.ContainerConfig{
-		Name:       checkEnvNotNull("ROLENV_NAME"),
-		Image:      checkEnvNotNull("ROLENV_IMAGE"),
-		Ports:      parseKeyValuePairs(envMap["ROLENV_PORT"]),
-		Network:    envMap["ROLENV_NETWORK"],
-		Hosts:      parseKeyValuePairs(envMap["ROLENV_HOSTS"]),
-		Entrypoint: parseList(envMap["ROLENV_ENTRYPOINT"]),
-		Command:    parseList(envMap["ROLENV_COMMAND"]),
-		Hostname:   envMap["ROLENV_HOSTNAME"],
-		Privileged: parseBoolEnv(envMap["ROLENV_PRIVILEGED"]),
+		Name:          checkEnvNotNull("ROLENV_NAME"),
+		Image:         checkEnvNotNull("ROLENV_IMAGE"),
+		Ports:         parseKeyValuePairs(envMap["ROLENV_PORT"]),
+		Network:       envMap["ROLENV_NETWORK"],
+		Hosts:         parseKeyValuePairs(envMap["ROLENV_HOSTS"]),
+		Entrypoint:    parseList(envMap["ROLENV_ENTRYPOINT"]),
+		Command:       parseList(envMap["ROLENV_COMMAND"]),
+		Hostname:      envMap["ROLENV_HOSTNAME"],
+		Privileged:    parseBoolEnv(envMap["ROLENV_PRIVILEGED"]),
+		RestartPolicy: docker.SetRestartPolicy(envMap["ROLENV_RESTART_POLICY"], parsePositiveNumber(envMap["ROLENV_RESTART_POLICY_MAX_RETRIES"])),
 	}
 
 	return config, nil

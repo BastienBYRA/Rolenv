@@ -1,6 +1,8 @@
 package docker
 
-import "github.com/bastienbyra/rolenv/internal/docker/enums"
+import (
+	"github.com/docker/docker/api/types/container"
+)
 
 type ContainerConfig struct {
 	Name          string
@@ -12,5 +14,5 @@ type ContainerConfig struct {
 	Command       []string
 	Hostname      string
 	Privileged    bool
-	RestartPolicy enums.RestartPolicy
+	RestartPolicy container.RestartPolicy
 }

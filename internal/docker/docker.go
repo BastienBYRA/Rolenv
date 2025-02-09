@@ -31,7 +31,9 @@ func Run(cc *ContainerConfig) {
 
 	// Create the container
 	contConfig := createContainerConfig(cc)
-	resp, err := cli.ContainerCreate(ctx, contConfig, nil, nil, nil, cc.Name)
+	hostConfig := createContainerHostConfig(cc)
+
+	resp, err := cli.ContainerCreate(ctx, contConfig, hostConfig, nil, nil, cc.Name)
 	if err != nil {
 		panic(err)
 	}
@@ -64,4 +66,13 @@ func createContainerConfig(cc *ContainerConfig) *container.Config {
 	// config.ExposedPorts = nat.PortSet{"truc": {}}
 	return &config
 
+}
+
+func createContainerHostConfig(cc *ContainerConfig) *container.HostConfig {
+	config := container.HostConfig{
+		Privileged:    cc.Privileged,
+		RestartPolicy: cc.RestartPolicy,
+	}
+
+	return &config
 }
