@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/image"
@@ -75,4 +76,54 @@ func createContainerHostConfig(cc *ContainerConfig) *container.HostConfig {
 	}
 
 	return &config
+}
+
+// While the name is "validate", the configuration is actually validate at it creation in LoadConfig
+// We just print the configuration
+func Validate(cc *ContainerConfig) {
+	fmt.Println("Your container configuration:")
+	fmt.Printf("- Name: %s\n", cc.Name)
+	fmt.Printf("- Image: %s\n", cc.Image)
+
+	if len(cc.Ports) > 0 {
+		fmt.Printf("- Open Ports: %s\n", strings.Join(cc.Ports, ", "))
+	} else {
+		// fmt.Println("- Open Ports: None")
+	}
+
+	if cc.Network != "" {
+		fmt.Printf("- Network: %s\n", cc.Network)
+	} else {
+		// fmt.Println("- Network: None")
+	}
+
+	if len(cc.Hosts) > 0 {
+		fmt.Printf("- Hosts: %s\n", strings.Join(cc.Hosts, ", "))
+	} else {
+		// fmt.Println("- Hosts: None")
+	}
+
+	if len(cc.Entrypoint) > 0 {
+		fmt.Printf("- Entrypoint: %s\n", strings.Join(cc.Entrypoint, " "))
+	} else {
+		// fmt.Println("- Entrypoint: Default")
+	}
+
+	if len(cc.Command) > 0 {
+		fmt.Printf("- Command: %s\n", strings.Join(cc.Command, " "))
+	} else {
+		// fmt.Println("- Command: None")
+	}
+
+	if cc.Hostname != "" {
+		fmt.Printf("- Hostname: %s\n", cc.Hostname)
+	} else {
+		// fmt.Println("- Hostname: None")
+	}
+
+	if cc.Privileged {
+		fmt.Printf("- Privileged: %t\n", cc.Privileged)
+	}
+
+	fmt.Printf("- Restart Policy: %s\n", cc.RestartPolicy.Name)
 }
