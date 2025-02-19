@@ -6,24 +6,24 @@ import (
 	"strings"
 )
 
-// Parse and split a list of key:value provided in the following forms :
+// Parse and split a list of key:value pairs provided in the following forms :
 // Example:
 //
 //	input: key1:value1;key2:value2;key3:value3
 //	output: ["key1:value1", "key2:value2", "key3:value3"]
-func parseKeyValuePairs(portStr string) []string {
-	if portStr == "" {
+func parseKeyValuePairs(inputStr string) []string {
+	if inputStr == "" {
 		return []string{}
 	}
 
-	// Separate each port in a combinaison of it source:dest
-	portPairs := strings.Split(portStr, ";")
+	// Separate each pair in a combination of key:value
+	pairs := strings.Split(inputStr, ";")
 	var result []string
 
 	// Remove space and add it to result array
-	for _, portPair := range portPairs {
-		portPair = strings.TrimSpace(portPair)
-		result = append(result, portPair)
+	for _, pair := range pairs {
+		pair = strings.TrimSpace(pair)
+		result = append(result, pair)
 	}
 
 	return result

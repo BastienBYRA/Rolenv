@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"strings"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/image"
+	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/client"
 )
 
@@ -33,6 +35,7 @@ func Run(cc *ContainerConfig) {
 	// Create the container
 	contConfig := createContainerConfig(cc)
 	hostConfig := createContainerHostConfig(cc)
+	// netconf := network.NetworkingConfig
 
 	resp, err := cli.ContainerCreate(ctx, contConfig, hostConfig, nil, nil, cc.Name)
 	if err != nil {
@@ -64,6 +67,12 @@ func createContainerConfig(cc *ContainerConfig) *container.Config {
 		config.Cmd = cc.Command
 	}
 
+	// mySet := make(map[string]struct{})
+	// mySet["what"] = struct{}{}
+	// config.Volumes = map[string]struct{}{
+	// 	"/data": {},
+	// }
+
 	// config.ExposedPorts = nat.PortSet{"truc": {}}
 	return &config
 
@@ -74,6 +83,36 @@ func createContainerHostConfig(cc *ContainerConfig) *container.HostConfig {
 		Privileged:    cc.Privileged,
 		RestartPolicy: cc.RestartPolicy,
 	}
+
+	if len(cc.Volumes) > 0 {
+
+		binds := []string{}
+		mounts := []mount.Mount{}
+
+		for _, volume := range cc.Volumes {
+
+			if IsNamedVolume(volume) {
+				binds = append(binds, volume)
+			} else {
+				parts := strings.Split(volume, ":")
+				mount := mount.Mount{
+					Type:   mount.TypeBind,
+					Source: parts[0],
+					Target: parts[1],
+				}
+				mounts = append(mounts, mount)
+			}
+		}
+
+		config.Binds = binds
+		config.Mounts = mounts
+	}
+
+	path, err := os.Getwd()
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(path + "\\fold")
 
 	return &config
 }

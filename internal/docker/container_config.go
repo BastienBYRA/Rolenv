@@ -15,4 +15,5 @@ type ContainerConfig struct {
 	Hostname      string
 	Privileged    bool
 	RestartPolicy container.RestartPolicy
+	Volumes       []string
 }
