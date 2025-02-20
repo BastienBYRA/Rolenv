@@ -4,13 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/image"
-	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/client"
 )
 
@@ -84,35 +82,13 @@ func createContainerHostConfig(cc *ContainerConfig) *container.HostConfig {
 		RestartPolicy: cc.RestartPolicy,
 	}
 
-	if len(cc.Volumes) > 0 {
-
-		binds := []string{}
-		mounts := []mount.Mount{}
-
-		for _, volume := range cc.Volumes {
-
-			if IsNamedVolume(volume) {
-				binds = append(binds, volume)
-			} else {
-				parts := strings.Split(volume, ":")
-				mount := mount.Mount{
-					Type:   mount.TypeBind,
-					Source: parts[0],
-					Target: parts[1],
-				}
-				mounts = append(mounts, mount)
-			}
-		}
-
-		config.Binds = binds
-		config.Mounts = mounts
+	if len(cc.VolumeBinds) > 0 {
+		config.Binds = cc.VolumeBinds
 	}
 
-	path, err := os.Getwd()
-	if err != nil {
-		log.Println(err)
+	if len(cc.VolumeMounts) > 0 {
+		config.Mounts = cc.VolumeMounts
 	}
-	fmt.Println(path + "\\fold")
 
 	return &config
 }
