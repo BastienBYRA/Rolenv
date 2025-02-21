@@ -33,6 +33,7 @@ func LoadConfig(filename string) (*docker.ContainerConfig, error) {
 		Hostname:      envMap["ROLENV_HOSTNAME"],
 		Privileged:    parseBoolEnv(envMap["ROLENV_PRIVILEGED"]),
 		RestartPolicy: docker.SetRestartPolicy(envMap["ROLENV_RESTART_POLICY"], parsePositiveNumber(envMap["ROLENV_RESTART_POLICY_MAX_RETRIES"])),
+		User:          envMap["ROLENV_USER"],
 	}
 	// Initialize the volumes
 	config.GuessVolumeType(parseKeyValuePairs(envMap["ROLENV_VOLUMES"]))

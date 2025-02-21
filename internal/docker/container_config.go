@@ -22,6 +22,7 @@ type ContainerConfig struct {
 	RestartPolicy container.RestartPolicy
 	VolumeBinds   []string
 	VolumeMounts  []mount.Mount
+	User          string
 }
 
 // GuessVolumeType analyzes a list of Docker volumes provided as a semicolon-separated string

@@ -65,15 +65,11 @@ func createContainerConfig(cc *ContainerConfig) *container.Config {
 		config.Cmd = cc.Command
 	}
 
-	// mySet := make(map[string]struct{})
-	// mySet["what"] = struct{}{}
-	// config.Volumes = map[string]struct{}{
-	// 	"/data": {},
-	// }
+	if cc.User != "" {
+		config.User = cc.User
+	}
 
-	// config.ExposedPorts = nat.PortSet{"truc": {}}
 	return &config
-
 }
 
 func createContainerHostConfig(cc *ContainerConfig) *container.HostConfig {
