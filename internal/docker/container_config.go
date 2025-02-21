@@ -2,6 +2,7 @@ package docker
 
 import (
 	"log"
+	"path/filepath"
 	"strings"
 
 	"github.com/docker/docker/api/types/container"
@@ -60,13 +61,21 @@ func (c *ContainerConfig) GuessVolumeType(volumes []string) {
 	if len(volumes) > 0 {
 		for _, volume := range volumes {
 
+			// If the volume is a named one
 			if isNamedVolume(volume) {
 				c.VolumeBinds = append(c.VolumeBinds, volume)
 			} else {
+				// If the volume is a local one (mounted)
 				parts := strings.Split(volume, ":")
+
+				absolutePath, err := filepath.Abs(parts[0])
+				if err != nil {
+					log.Fatalf("Error occurred during path conversion : %v", err)
+				}
+
 				mount := mount.Mount{
 					Type:   mount.TypeBind,
-					Source: parts[0],
+					Source: absolutePath,
 					Target: parts[1],
 				}
 				c.VolumeMounts = append(c.VolumeMounts, mount)
