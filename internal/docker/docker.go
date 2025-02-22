@@ -69,6 +69,10 @@ func createContainerConfig(cc *ContainerConfig) *container.Config {
 		config.User = cc.User
 	}
 
+	if len(cc.EnvList) > 0 {
+		config.Env = cc.EnvList
+	}
+
 	return &config
 }
 

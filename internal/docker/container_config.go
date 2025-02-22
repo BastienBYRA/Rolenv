@@ -23,6 +23,7 @@ type ContainerConfig struct {
 	VolumeBinds   []string
 	VolumeMounts  []mount.Mount
 	User          string
+	EnvList       []string
 }
 
 // GuessVolumeType analyzes a list of Docker volumes provided as a semicolon-separated string
