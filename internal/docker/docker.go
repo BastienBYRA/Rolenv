@@ -90,6 +90,14 @@ func createContainerHostConfig(cc *ContainerConfig) *container.HostConfig {
 		config.Mounts = cc.VolumeMounts
 	}
 
+	if cc.MemoryHardLimit > 0 {
+		config.Memory = cc.MemoryHardLimit
+	}
+
+	if cc.CPUCoreLimit > 0 {
+		config.NanoCPUs = cc.CPUCoreLimit
+	}
+
 	return &config
 }
 

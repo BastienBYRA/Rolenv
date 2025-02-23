@@ -2,6 +2,7 @@ package utils
 
 import (
 	"log"
+	"strconv"
 	"strings"
 )
 
@@ -16,4 +17,32 @@ func CheckEnvNotNullFromEnvFile(envMap map[string]string) func(string) string {
 		}
 		return value
 	}
+}
+
+func CheckEnvNotNullOrDefault(value string, defaultValue interface{}) interface{} {
+	switch defaultValue.(type) {
+	case string:
+		if value != "" {
+			return defaultValue
+		}
+		return defaultValue
+	case int:
+		valInt, err := strconv.Atoi(value)
+		if err != nil {
+			return defaultValue
+		}
+		return valInt
+	default:
+		log.Fatalf("The type of defaultValue is not handled in the CheckEnvNotNullOrDefault function, type: %T", defaultValue)
+		return "Shouldn't go here"
+	}
+}
+
+func CheckEnvNotNullOrDefaultInt(value string, defaultValue int) int {
+	res := CheckEnvNotNullOrDefault(value, defaultValue)
+	resInt, isOk := res.(int)
+	if !isOk {
+		log.Fatalf("Error converting the interface value to int, value: %v", res)
+	}
+	return resInt
 }

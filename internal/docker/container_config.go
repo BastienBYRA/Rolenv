@@ -10,20 +10,22 @@ import (
 )
 
 type ContainerConfig struct {
-	Name          string
-	Image         string
-	Ports         []string
-	Network       string
-	Hosts         []string // --add-host
-	Entrypoint    []string
-	Command       []string
-	Hostname      string
-	Privileged    bool
-	RestartPolicy container.RestartPolicy
-	VolumeBinds   []string
-	VolumeMounts  []mount.Mount
-	User          string
-	EnvList       []string
+	Name            string // Docker CLI equivalent : --name ; ROLENV variable name : ROLENV_NAME
+	Image           string
+	Ports           []string
+	Network         string
+	Hosts           []string // --add-host
+	Entrypoint      []string
+	Command         []string
+	Hostname        string
+	Privileged      bool
+	RestartPolicy   container.RestartPolicy
+	VolumeBinds     []string
+	VolumeMounts    []mount.Mount
+	User            string
+	EnvList         []string
+	MemoryHardLimit int64
+	CPUCoreLimit    int64
 }
 
 // GuessVolumeType analyzes a list of Docker volumes provided as a semicolon-separated string
@@ -83,5 +85,25 @@ func (c *ContainerConfig) GuessVolumeType(volumes []string) {
 				c.VolumeMounts = append(c.VolumeMounts, mount)
 			}
 		}
+	}
+}
+
+// convertCpuToNanoCores converts the CPU core limit from a user-provided value
+// to the equivalent value in nanocores, as expected by Docker.
+//
+// Example:
+//
+//	input:  c.CPUCoreLimit = 2.5 (representing 2.5 CPU cores)
+//	output: c.CPUCoreLimit = 2500000000 (2.5 billion nanocores)
+func (c *ContainerConfig) ConvertCpuToNanoCores() {
+	if c.CPUCoreLimit > 0 {
+		// Convert CPU core limit to nanocores by multiplying by 1 billion (10^9)
+		c.CPUCoreLimit = c.CPUCoreLimit * 1000000000
+	}
+}
+
+func (c *ContainerConfig) ConvertMemoryMegabytesToBytes() {
+	if c.MemoryHardLimit > 0 {
+		c.MemoryHardLimit = c.MemoryHardLimit * 1000000
 	}
 }
