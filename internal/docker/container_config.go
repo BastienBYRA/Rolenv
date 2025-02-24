@@ -26,6 +26,7 @@ type ContainerConfig struct {
 	EnvList         []string
 	MemoryHardLimit int64
 	CPUCoreLimit    int64
+	ReadonlyRootFS  bool
 }
 
 // GuessVolumeType analyzes a list of Docker volumes provided as a semicolon-separated string

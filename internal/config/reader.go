@@ -38,6 +38,7 @@ func LoadConfig(filename string) (*docker.ContainerConfig, error) {
 		EnvList:         getContainerEnvVars(envMap),
 		MemoryHardLimit: int64(utils.CheckEnvNotNullOrDefaultInt(envMap["ROLENV_MEMORY_LIMIT"], 0)),
 		CPUCoreLimit:    int64(utils.CheckEnvNotNullOrDefaultInt(envMap["ROLENV_CPU_CORE_LIMIT"], 0)),
+		ReadonlyRootFS:  utils.CheckEnvNotNullOrDefaultBool(envMap["ROLENV_READONLY"], false),
 	}
 
 	// GuessVolumeType identifies user-defined volumes as named or bind mounts and assigns them to VolumeBinds or VolumeMounts.

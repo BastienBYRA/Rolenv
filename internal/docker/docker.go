@@ -78,8 +78,9 @@ func createContainerConfig(cc *ContainerConfig) *container.Config {
 
 func createContainerHostConfig(cc *ContainerConfig) *container.HostConfig {
 	config := container.HostConfig{
-		Privileged:    cc.Privileged,
-		RestartPolicy: cc.RestartPolicy,
+		Privileged:     cc.Privileged,
+		RestartPolicy:  cc.RestartPolicy,
+		ReadonlyRootfs: cc.ReadonlyRootFS,
 	}
 
 	if len(cc.VolumeBinds) > 0 {

@@ -46,3 +46,12 @@ func CheckEnvNotNullOrDefaultInt(value string, defaultValue int) int {
 	}
 	return resInt
 }
+
+func CheckEnvNotNullOrDefaultBool(value string, defaultValue bool) bool {
+	res := CheckEnvNotNullOrDefault(value, defaultValue)
+	resBool, isOk := res.(bool)
+	if !isOk {
+		log.Fatalf("Error converting the interface value to bool, value: %v", res)
+	}
+	return resBool
+}
