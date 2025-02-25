@@ -99,6 +99,10 @@ func createContainerHostConfig(cc *ContainerConfig) *container.HostConfig {
 		config.NanoCPUs = cc.CPUCoreLimit
 	}
 
+	if len(cc.SecurityOpts) > 0 {
+		config.SecurityOpt = cc.SecurityOpts
+	}
+
 	return &config
 }
 
