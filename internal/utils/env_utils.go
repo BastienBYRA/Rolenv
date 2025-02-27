@@ -32,6 +32,12 @@ func CheckEnvNotNullOrDefault(value string, defaultValue interface{}) interface{
 			return defaultValue
 		}
 		return valInt
+	case bool:
+		valBool, err := strconv.ParseBool(value)
+		if err != nil {
+			return defaultValue
+		}
+		return valBool
 	default:
 		log.Fatalf("The type of defaultValue is not handled in the CheckEnvNotNullOrDefault function, type: %T", defaultValue)
 		return "Shouldn't go here"
