@@ -36,8 +36,16 @@ jobs:
     - name: Extract version from version file
       id: get_version
       run: |
-        VERSION=$(cat version)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          # Pour Windows (PowerShell)
+          VERSION=$(powershell -command "Get-Content version")
+          powershell -command "Add-Content -Path \$env:GITHUB_ENV -Value 'VERSION=$VERSION'"
+        else
+          # Pour Linux/macOS (Bash)
+          VERSION=$(cat version)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        fi
+      shell: bash
 
     - name: Build
       run: |
