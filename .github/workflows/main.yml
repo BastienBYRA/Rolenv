@@ -1,4 +1,5 @@
 name: Build and Release
+
 on:
   push:
     branches:
@@ -32,28 +33,56 @@ jobs:
       with:
         go-version: '1.23.5'
 
+    - name: Extract version from version file
+      id: get_version
+      run: |
+        VERSION=$(cat version)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
     - name: Build
       run: |
         GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
+
+  create_release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: artifacts
+
+    - name: Extract version from version file
+      id: get_version
+      run: |
+        VERSION=$(cat version)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
     - name: Create Release
-      if: ${{ matrix.os == 'ubuntu-latest' }}
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: v${{ env.VERSION }}
+        release_name: Release v${{ env.VERSION }}
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset
+    - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
+        asset_path: ./artifacts/rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
         asset_name: rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
         asset_content_type: application/octet-stream
