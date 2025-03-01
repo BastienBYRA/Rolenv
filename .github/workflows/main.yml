@@ -2,20 +2,27 @@ name: Build and Release
 on:
   push:
     branches:
-      - test-release
+      - release
 
 permissions:
   contents: write
-  
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        goos: [linux, windows, darwin]
-        goarch: [amd64]
-    
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
