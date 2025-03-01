@@ -77,6 +77,12 @@ jobs:
       with:
         path: artifacts
 
+    - name: Flatten artifact structure
+      run: |
+        mkdir -p binaries
+        cp -r artifacts/*/rolenv-* binaries/
+      shell: bash
+
     - name: Extract version from version file
       id: get_version
       run: |
@@ -93,8 +99,8 @@ jobs:
         draft: false
         prerelease: false
         files: |
-          artifacts/rolenv-linux-amd64
-          artifacts/rolenv-windows-amd64
-          artifacts/rolenv-darwin-amd64
+          binaries/rolenv-linux-amd64
+          binaries/rolenv-windows-amd64
+          binaries/rolenv-darwin-amd64
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
