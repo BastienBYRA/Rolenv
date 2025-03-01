@@ -1,7 +1,7 @@
 # Rolenv
 🚢📦 A simple way to run Docker containers by defining an environment variable file 
 
-Rolenv's sole purpose today is to launch Docker containers using a .env file and validate their configuration.
+*Rolenv's sole purpose today is to launch Docker containers using a .env file and validate their configuration.*
 
 ## Installation
 
@@ -70,17 +70,6 @@ The `validate` command checks if the configuration is valid and can be used to r
 $ rolenv validate
 # Providing a configuration file
 $ rolenv validate --config-file /path/to/my/rolenv.env/or/.env/or/whatever.env
-```
-
-### Print
-
-The `print` command displays the container configuration.
-
-```bash
-# Display the container configuration
-$ rolenv print
-# Providing a configuration file
-$ rolenv print --config-file /path/to/my/rolenv.env/or/.env/or/whatever.env
 ```
 
 ## License
