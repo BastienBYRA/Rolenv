@@ -11,29 +11,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// runCmd represents the run command
-var runCmd = &cobra.Command{
-	Use:   "run",
-	Short: "Run a container",
+// validateCmd represents the validate command
+var validateCmd = &cobra.Command{
+	Use:   "validate",
+	Short: "Checks if the configuration is valid",
 	Run: func(cmd *cobra.Command, args []string) {
 		dockerConfig, err := config.LoadConfig(cfgFile)
 		if err != nil {
 			log.Fatalf("Erreur lors du chargement de la config : %v", err)
 		}
-		docker.Run(dockerConfig)
+		docker.Validate(dockerConfig)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(runCmd)
+	rootCmd.AddCommand(validateCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// runCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// validateCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// runCmd.Flags().StringP("config-file", "f", ".", "Path to the configuration file")
+	// validateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -9,9 +9,9 @@ TODO
 
 ### Configuration
 
-Rolenv is launched by running the `rolenv` command. For proper operation, it expects an `.env` file.
+Rolenv is launched by running the `rolenv` command. For proper operation, it expects an `*.env` file.
 
-By default, Rolenv looks for a file named `rolenv.env`, and if it doesn't find one, it will look for a `.env` file, both in the root of its execution directory.
+By default, Rolenv looks for a file named `rolenv.env` in the root of its execution directory.
 
 It is possible to specify the path to the Rolenv configuration file using `rolenv --config-file /path/to/.env`.
 
@@ -33,7 +33,7 @@ The container definition is done exclusively through the use of environment vari
 | ROLENV_RESTART_POLICY  | `no`          | string : `no`, `on-failure`, `always`, `unless-stopped`                                           | `--restart`                |
 | ROLENV_RESTART_POLICY_MAX_RETRIES | `0` | integer : positive number                                                                         | `--restart-max-attempts`   |
 | ROLENV_USER            | (image default user) | string : `user`, `user:group`, `uid:gid`                                                   | `--user`                   |
-| ROLENV_ENV_LIST        | ``            | list of key-value pairs : `VAR1=value1`, `VAR2=value2`                                            | `-e/--env`                 |
+| ROLENV_ENV_LIST        | ``            | All environment variables that do not start with "ROLENV_"                                        | `-e/--env`                 |
 | ROLENV_MEMORY_LIMIT    | `-1` (unlimited)| integer : memory in bytes                                                                         | `--memory`                 |
 | ROLENV_CPU_CORE_LIMIT  | `-1` (unlimited)| integer : number of CPU cores                                                                     | `--cpus`                   |
 | ROLENV_READONLY        | `false`       | boolean : `true`, `false`                                                                         | `--read-only`              |

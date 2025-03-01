@@ -115,43 +115,54 @@ func Validate(cc *ContainerConfig) {
 
 	if len(cc.Ports) > 0 {
 		fmt.Printf("- Open Ports: %s\n", strings.Join(cc.Ports, ", "))
-	} else {
-		// fmt.Println("- Open Ports: None")
 	}
 
 	if cc.Network != "" {
 		fmt.Printf("- Network: %s\n", cc.Network)
-	} else {
-		// fmt.Println("- Network: None")
+	}
+
+	fmt.Printf("- Restart Policy: %s\n", cc.RestartPolicy.Name)
+
+	if len(cc.EnvList) > 0 {
+		fmt.Printf("- Environment variables : %s\n", strings.Join(cc.EnvList, ", "))
 	}
 
 	if len(cc.Hosts) > 0 {
 		fmt.Printf("- Hosts: %s\n", strings.Join(cc.Hosts, ", "))
-	} else {
-		// fmt.Println("- Hosts: None")
 	}
 
 	if len(cc.Entrypoint) > 0 {
 		fmt.Printf("- Entrypoint: %s\n", strings.Join(cc.Entrypoint, " "))
-	} else {
-		// fmt.Println("- Entrypoint: Default")
 	}
 
 	if len(cc.Command) > 0 {
 		fmt.Printf("- Command: %s\n", strings.Join(cc.Command, " "))
-	} else {
-		// fmt.Println("- Command: None")
 	}
+
+	if cc.User != "" {
+		fmt.Printf("- User: %s\n", cc.User)
+	}
+
+	if cc.CPUCoreLimit > 0 {
+		fmt.Printf("- CPU Limit: %v CPU cores\n", cc.CPUCoreLimit/1000000000)
+	}
+
+	if cc.MemoryHardLimit > 0 {
+		fmt.Printf("- Memory Limit: %vm\n", cc.MemoryHardLimit/1000000)
+	}
+
+	fmt.Printf("- Readonly filesystem: %t\n", cc.ReadonlyRootFS)
 
 	if cc.Hostname != "" {
 		fmt.Printf("- Hostname: %s\n", cc.Hostname)
-	} else {
-		// fmt.Println("- Hostname: None")
 	}
 
 	if cc.Privileged {
 		fmt.Printf("- Privileged: %t\n", cc.Privileged)
 	}
 
-	fmt.Printf("- Restart Policy: %s\n", cc.RestartPolicy.Name)
+	if len(cc.SecurityOpts) > 0 {
+		fmt.Printf("- Security options: %s\n", strings.Join(cc.Hosts, ", "))
+	}
+
 }

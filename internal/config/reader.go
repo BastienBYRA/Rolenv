@@ -2,6 +2,9 @@ package config
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/bastienbyra/rolenv/internal/docker"
@@ -10,15 +13,49 @@ import (
 )
 
 // LoadConfig load the config file .env, and from it generate the spec of the Container to create
-func LoadConfig(filename string) (*docker.ContainerConfig, error) {
-	if filename == "" {
-		filename = ".env"
+func LoadConfig(pathfile string) (*docker.ContainerConfig, error) {
+	var absoluteFilePath string
+	var envMap map[string]string
+
+	if pathfile != "" {
+		absolutePath, err := filepath.Abs(pathfile)
+		if err != nil {
+			log.Fatalf("Error occurred while looking for the config file : %v", err)
+		}
+		absoluteFilePath = absolutePath
+	} else {
+		absolutePath, err := filepath.Abs(".")
+		if err != nil {
+			log.Fatalf("Error occurred while looking for the config file : %v", err)
+		}
+		absoluteFilePath = absolutePath
 	}
 
-	// Ensure we can read the file
-	envMap, err := godotenv.Read(filename)
+	isFileOrDir, err := os.Stat(absoluteFilePath)
 	if err != nil {
-		return nil, fmt.Errorf("error loading .env file: %w", err)
+		log.Fatal(err)
+	}
+
+	switch mode := isFileOrDir.Mode(); {
+	// Path is dir
+	case mode.IsDir():
+		// Ensure we can read the file
+		envMapData, err := godotenv.Read(absoluteFilePath + "/rolenv.env")
+		if err != nil {
+			log.Fatal("error loading rolenv.env file: ", err)
+			return nil, fmt.Errorf("error loading rolenv.env file: %w", err)
+		}
+		envMap = envMapData
+
+	// Path is file
+	case mode.IsRegular():
+		// Ensure we can read the file
+		envMapData, err := godotenv.Read(absoluteFilePath)
+		if err != nil {
+			log.Fatal("error loading rolenv.env file: ", err)
+			return nil, fmt.Errorf("error loading .env file: %w", err)
+		}
+		envMap = envMapData
 	}
 
 	// Generate the container configuration from it
