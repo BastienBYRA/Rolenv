@@ -29,17 +29,17 @@ The container definition is done exclusively through the use of environment vari
 | ROLENV_ENTRYPOINT      | ``            | Comma-separated list of strings : `/bin/bash`, `python;app.py`                                    | `--entrypoint`             |
 | ROLENV_COMMAND         | ``            | Comma-separated list of strings : `arg1;arg2`                                                     | `COMMAND`                  |
 | ROLENV_HOSTNAME        | (container ID)| string : `my-hostname`                                                                            | `--hostname`               |
-| ROLENV_PRIVILEGED      | `false`       | boolean : `true`, `false`                                                                         | `--privileged`             |
+| ROLENV_PRIVILEGED      | `false`       | boolean : `true`, `false`, `yes`, `no`                                                            | `--privileged`             |
 | ROLENV_RESTART_POLICY  | `no`          | string : `no`, `on-failure`, `always`, `unless-stopped`                                           | `--restart`                |
 | ROLENV_RESTART_POLICY_MAX_RETRIES | `0` | integer : positive number                                                                         | `--restart-max-attempts`   |
 | ROLENV_USER            | (image default user) | string : `user`, `user:group`, `uid:gid`                                                   | `--user`                   |
 | ROLENV_MEMORY_LIMIT    | `-1` (unlimited)| integer : memory in bytes                                                                         | `--memory`                 |
 | ROLENV_CPU_CORE_LIMIT  | `-1` (unlimited)| integer : number of CPU cores                                                                     | `--cpus`                   |
-| ROLENV_READONLY        | `false`       | boolean : `true`, `false`                                                                         | `--read-only`              |
-| ROLENV_SECURITY_OPTS   | ``            | Comma-separated list of strings : `no-new-privileges;seccomp=unconfined`                          | `--security-opt`           |
+| ROLENV_READONLY        | `false`       | boolean : `true`, `false`, `yes`, `no`                                                              | `--read-only`              |
+| ROLENV_SECURITY_OPTS+   | ``            | Comma-separated list of strings : `no-new-privileges;seccomp=unconfined`                          | `--security-opt`           |
 | ROLENV_VOLUMES         | ``            | Comma-separated list of key-value pairs : `./test:/tmp/test;data-rolenv-test:/a-folder`           | `-v/--volume`              |
 
-### Application environnement variables
+### Application environment variables
 All environment variables in the `*.env` file that do not start with ROLENV_ will be added to the container as application environment variables.
 
 ## Start the Program

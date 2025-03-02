@@ -11,7 +11,7 @@ import (
 //
 //	input: key1:value1;key2:value2;key3:value3
 //	output: ["key1:value1", "key2:value2", "key3:value3"]
-func parseKeyValuePairs(inputStr string) []string {
+func ParseKeyValuePairs(inputStr string) []string {
 	if inputStr == "" {
 		return []string{}
 	}

@@ -63,9 +63,9 @@ func LoadConfig(pathfile string) (*docker.ContainerConfig, error) {
 	config := &docker.ContainerConfig{
 		Name:            checkEnvNotNull("ROLENV_NAME"),
 		Image:           checkEnvNotNull("ROLENV_IMAGE"),
-		Ports:           parseKeyValuePairs(envMap["ROLENV_PORTS"]),
+		Ports:           ParseKeyValuePairs(envMap["ROLENV_PORTS"]),
 		Network:         envMap["ROLENV_NETWORK"],
-		Hosts:           parseKeyValuePairs(envMap["ROLENV_HOSTS"]),
+		Hosts:           ParseKeyValuePairs(envMap["ROLENV_HOSTS"]),
 		Entrypoint:      parseList(envMap["ROLENV_ENTRYPOINT"]),
 		Command:         parseList(envMap["ROLENV_COMMAND"]),
 		Hostname:        envMap["ROLENV_HOSTNAME"],
@@ -80,7 +80,7 @@ func LoadConfig(pathfile string) (*docker.ContainerConfig, error) {
 	}
 
 	// GuessVolumeType identifies user-defined volumes as named or bind mounts and assigns them to VolumeBinds or VolumeMounts.
-	config.GuessVolumeType(parseKeyValuePairs(envMap["ROLENV_VOLUMES"]))
+	config.GuessVolumeType(ParseKeyValuePairs(envMap["ROLENV_VOLUMES"]))
 
 	// converts the CPU core limit to the equivalent value in nanocores as expected by Docker
 	config.ConvertCpuToNanoCores()
