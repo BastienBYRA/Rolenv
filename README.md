@@ -7,7 +7,7 @@
 
 TODO
 
-### Configuration
+## Configuration
 
 Rolenv is launched by running the `rolenv` command. For proper operation, it expects an `*.env` file.
 
@@ -33,12 +33,14 @@ The container definition is done exclusively through the use of environment vari
 | ROLENV_RESTART_POLICY  | `no`          | string : `no`, `on-failure`, `always`, `unless-stopped`                                           | `--restart`                |
 | ROLENV_RESTART_POLICY_MAX_RETRIES | `0` | integer : positive number                                                                         | `--restart-max-attempts`   |
 | ROLENV_USER            | (image default user) | string : `user`, `user:group`, `uid:gid`                                                   | `--user`                   |
-| ROLENV_ENV_LIST        | ``            | All environment variables that do not start with "ROLENV_"                                        | `-e/--env`                 |
 | ROLENV_MEMORY_LIMIT    | `-1` (unlimited)| integer : memory in bytes                                                                         | `--memory`                 |
 | ROLENV_CPU_CORE_LIMIT  | `-1` (unlimited)| integer : number of CPU cores                                                                     | `--cpus`                   |
 | ROLENV_READONLY        | `false`       | boolean : `true`, `false`                                                                         | `--read-only`              |
 | ROLENV_SECURITY_OPTS   | ``            | Comma-separated list of strings : `no-new-privileges;seccomp=unconfined`                          | `--security-opt`           |
 | ROLENV_VOLUMES         | ``            | Comma-separated list of key-value pairs : `./test:/tmp/test;data-rolenv-test:/a-folder`           | `-v/--volume`              |
+
+### Application environnement variables
+All environment variables in the `*.env` file that do not start with ROLENV_ will be added to the container as application environment variables.
 
 ## Start the Program
 
