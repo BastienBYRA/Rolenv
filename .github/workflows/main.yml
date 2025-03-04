@@ -34,8 +34,13 @@ jobs:
       run: |
         go build -o rolenv
         ./rolenv run --config testdata/rolenv.env
-        sleep 10
-        docker ps | grep rolenv || (echo "Le conteneur ne tourne pas" && exit 1)
+        sleep 5
+        if docker ps | grep rolenv-test-cont; then
+          echo "The container Rolenv is running"
+        else
+          echo "Error, the container is not running" && exit 1
+        fi
+
 
   build:
     needs: test
