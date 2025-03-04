@@ -41,7 +41,6 @@ jobs:
           echo "Error, the container is not running" && exit 1
         fi
 
-
   build:
     needs: test
     if: github.ref == 'refs/heads/release' || github.base_ref == 'refs/heads/release'

@@ -19,11 +19,11 @@ func CheckEnvNotNullFromEnvFile(envMap map[string]string) func(string) string {
 	}
 }
 
-func CheckEnvNotNullOrDefault(value string, defaultValue interface{}) interface{} {
+func CheckEnvNotNullOrDefault(value string, defaultValue any) any {
 	switch defaultValue.(type) {
 	case string:
 		if value != "" {
-			return defaultValue
+			return value
 		}
 		return defaultValue
 	case int:
