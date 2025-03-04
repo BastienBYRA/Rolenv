@@ -33,7 +33,7 @@ jobs:
     - name: Integration tests
       run: |
         go build -o rolenv
-        ./rolenv --config testdata/rolenv.env &
+        ./rolenv run --config testdata/rolenv.env
         sleep 10
         docker ps | grep rolenv || (echo "Le conteneur ne tourne pas" && exit 1)
 
