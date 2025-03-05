@@ -5,7 +5,58 @@
 
 ## Installation
 
-TODO
+### Docker
+Docker is easiest way to run out Rolenv.
+```bash
+# To test using your local Docker socket
+docker pull 8271/rolenv-host-socket:latest
+```
+
+You can then run it
+```bash
+# You can validate the configuration of your container
+docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env 8271/rolenv-host-socket:latest validate --config /rolenv.env
+
+# You can run a container
+docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env 8271/rolenv-host-socket:latest run --config /rolenv.env
+```
+
+### Binary 
+#### Linux, WSL
+```bash
+export ROLENV_LATEST_VERSION=$(curl -L https://raw.githubusercontent.com/BastienBYRA/Rolenv/master/version)
+curl -L https://github.com/BastienBYRA/Rolenv/releases/download/v{ROLENV_LATEST_VERSION}/rolenv-linux-amd64 -o rolenv
+unset ROLENV_LATEST_VERSION
+```
+
+#### MacOS
+```bash
+export ROLENV_LATEST_VERSION=$(curl -L https://raw.githubusercontent.com/BastienBYRA/Rolenv/master/version)
+curl -L https://github.com/BastienBYRA/Rolenv/releases/download/v{ROLENV_LATEST_VERSION}/rolenv-darwin-amd64 -o rolenv
+unset ROLENV_LATEST_VERSION
+```
+
+#### Windows
+```powershell
+$ROLENV_LATEST_VERSION = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/BastienBYRA/Rolenv/master/version" -UseBasicParsing | Select-Object -ExpandProperty Content
+$ROLENV_LATEST_VERSION = $ROLENV_LATEST_VERSION.Trim()
+
+$downloadUrl = "https://github.com/BastienBYRA/Rolenv/releases/download/v$ROLENV_LATEST_VERSION/rolenv-windows-amd64"
+Invoke-WebRequest -Uri $downloadUrl -OutFile "rolenv"
+
+Remove-Variable ROLENV_LATEST_VERSION
+```
+
+### From source (Go)
+```bash
+# Build
+go get .
+go build -o rolenv
+
+# Run
+chmod +x rolenv
+./rolenv
+```
 
 ## Configuration
 
