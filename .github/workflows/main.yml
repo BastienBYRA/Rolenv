@@ -64,7 +64,8 @@ jobs:
         id: push
         uses: docker/build-push-action@v6.15.0
         with:
-          context: ./Dockerfile.host-socket
+          context: .
+          file: "{context}/Dockerfile.host-socket"
           push: true
           tags: ghcr.io/rolenv/rolenv-host-socket:latest
 
