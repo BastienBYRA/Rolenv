@@ -15,10 +15,10 @@ docker pull 8271/rolenv-host-socket:latest
 You can then run it
 ```bash
 # You can validate the configuration of your container
-docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env 8271/rolenv-host-socket:latest validate --config /rolenv.env
+docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env -v /var/run/docker.sock:/var/run/docker.sock 8271/rolenv-host-socket:latest validate --config /rolenv.env
 
 # You can run a container
-docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env 8271/rolenv-host-socket:latest run --config /rolenv.env
+docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env -v /var/run/docker.sock:/var/run/docker.sock 8271/rolenv-host-socket:latest run --config /rolenv.env
 ```
 
 ### Binary 

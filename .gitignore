@@ -26,4 +26,3 @@ go.work.sum
 
 # Temp
 test-volume/
-Dockerfile.*
