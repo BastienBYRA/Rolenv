@@ -135,7 +135,7 @@ jobs:
         path: rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
 
   create_release:
-    needs: build
+    needs: build-binairies
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/release' || github.base_ref == 'refs/heads/release'
 
