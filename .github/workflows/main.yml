@@ -44,14 +44,20 @@ jobs:
           echo "Error, the container is not running" && exit 1
         fi
 
-  build-container-testing:
+  build-image:
     needs: test
+    if: github.ref == 'refs/heads/release' || github.base_ref == 'refs/heads/release'
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Extract version from version file
+        id: get_version
+        run: |
+          VERSION=$(cat version)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Log in to the Container registry (GitHub Container Registry)
         uses: docker/login-action@v3.3.0
@@ -67,9 +73,11 @@ jobs:
           context: .
           file: "./Dockerfile.host-socket"
           push: true
-          tags: ghcr.io/bastienbyra/rolenv-host-socket:latest
+          tags: |
+            ghcr.io/bastienbyra/rolenv:${{ env.VERSION }}
+            ghcr.io/bastienbyra/rolenv:latest
 
-  build:
+  build-binairies:
     needs: test
     if: github.ref == 'refs/heads/release' || github.base_ref == 'refs/heads/release'
     runs-on: ${{ matrix.os }}

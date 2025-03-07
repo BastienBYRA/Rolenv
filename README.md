@@ -9,16 +9,16 @@
 Docker is easiest way to run out Rolenv.
 ```bash
 # To test using your local Docker socket
-docker pull 8271/rolenv-host-socket:latest
+docker pull ghcr.io/bastienbyra/rolenv:latest
 ```
 
 You can then run it
 ```bash
 # You can validate the configuration of your container
-docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env -v /var/run/docker.sock:/var/run/docker.sock 8271/rolenv-host-socket:latest validate --config /rolenv.env
+docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/bastienbyra/rolenv:latest validate --config /rolenv.env
 
 # You can run a container
-docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env -v /var/run/docker.sock:/var/run/docker.sock 8271/rolenv-host-socket:latest run --config /rolenv.env
+docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/bastienbyra/rolenv:latest run --config /rolenv.env
 ```
 
 ### Binary 
