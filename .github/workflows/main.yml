@@ -67,7 +67,7 @@ jobs:
           context: .
           file: "./Dockerfile.host-socket"
           push: true
-          tags: ghcr.io/${{ github.actor }}/rolenv-host-socket:latest
+          tags: ghcr.io/bastienbyra/rolenv-host-socket:latest
 
   build:
     needs: test
