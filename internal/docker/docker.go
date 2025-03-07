@@ -117,6 +117,19 @@ func Validate(cc *ContainerConfig) {
 		fmt.Printf("- Open Ports: %s\n", strings.Join(cc.Ports, ", "))
 	}
 
+	if len(cc.VolumeBinds) > 0 {
+		fmt.Printf("- Volume Binds: %s\n", strings.Join(cc.VolumeBinds, ", "))
+	}
+
+	if len(cc.VolumeMounts) > 0 {
+		listMount := []string{}
+		for _, v := range cc.VolumeMounts {
+			str := v.Source + ":" + v.Target
+			listMount = append(listMount, str)
+		}
+		fmt.Printf("- Volume Mounts: %s\n", strings.Join(listMount, ", "))
+	}
+
 	if cc.Network != "" {
 		fmt.Printf("- Network: %s\n", cc.Network)
 	}
