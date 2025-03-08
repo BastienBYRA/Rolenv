@@ -108,13 +108,13 @@ jobs:
     #     path: artifacts
 
   test-download:
-    needs: build-binairies
+    needs: test-build-and-download
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Download artifacts (Binary Linux)
       uses: actions/download-artifact@v4
       with:
