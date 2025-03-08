@@ -44,6 +44,94 @@ jobs:
           echo "Error, the container is not running" && exit 1
         fi
 
+  test-build-and-download:
+    needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+          # - os: windows-latest
+          #   goos: windows
+          #   goarch: amd64
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23.5'
+
+    - name: Extract version from version file
+      id: get_version
+      run: |
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          # Windows (PowerShell)
+          VERSION=$(powershell -command "Get-Content version")
+          powershell -command "Add-Content -Path \$env:GITHUB_ENV -Value 'VERSION=$VERSION'"
+        else
+          # Linux/macOS (Bash)
+          VERSION=$(cat version)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        fi
+      shell: bash
+
+    - name: Build
+      run: |
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          # Windows (PowerShell)
+          powershell -command "`$env:GOOS = 'windows'; `$env:GOARCH = 'amd64'; go build -o rolenv-${{ matrix.goos }}-${{ matrix.goarch }}"
+        else
+          # Linux/macOS (Bash)
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
+        fi
+      shell: bash
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
+
+    # Install binaries
+    # - name: Download artifacts (Binary Windows)
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: rolenv-windows-amd64
+    #     path: artifacts
+    - name: Download artifacts (Binary Linux)
+      uses: actions/download-artifact@v4
+      with:
+        name: rolenv-linux-amd64
+        path: artifacts
+    - name: Download artifacts (Binary MacOS)
+      uses: actions/download-artifact@v4
+      with:
+        name: rolenv-darwin-amd64
+        path: artifacts
+
+    - name: Flatten artifact structure
+      run: |
+        mkdir -p binaries
+        cp -r artifacts/*/rolenv-* binaries/
+      shell: bash
+
+
+
+
+
+
+
+
+
+
   build-image:
     needs: test
     if: github.ref == 'refs/heads/release' || github.base_ref == 'refs/heads/release'
