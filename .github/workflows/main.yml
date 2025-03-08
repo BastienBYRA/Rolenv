@@ -146,6 +146,7 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@v4
       with:
+        name: rolenv-*
         path: artifacts
 
     - name: Flatten artifact structure
