@@ -5,9 +5,59 @@
 
 ## Installation
 
-TODO
+### Docker
+Docker is easiest way to run out Rolenv.
+```bash
+docker pull ghcr.io/bastienbyra/rolenv-host-socket:latest
+```
 
-### Configuration
+You can then run it
+```bash
+# Validate the configuration of your container
+docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/bastienbyra/rolenv-host-socket:latest validate --config /rolenv.env
+
+# Run a container
+docker run --rm -v $(pwd)/path/to/rolenv.env:/rolenv.env -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/bastienbyra/rolenv-host-socket:latest run --config /rolenv.env
+```
+
+### Binary 
+#### Linux, WSL
+```bash
+export ROLENV_LATEST_VERSION=$(curl -L https://raw.githubusercontent.com/BastienBYRA/Rolenv/master/version)
+curl -L https://github.com/BastienBYRA/Rolenv/releases/download/v{ROLENV_LATEST_VERSION}/rolenv-linux-amd64 -o rolenv
+unset ROLENV_LATEST_VERSION
+```
+
+#### MacOS
+```bash
+export ROLENV_LATEST_VERSION=$(curl -L https://raw.githubusercontent.com/BastienBYRA/Rolenv/master/version)
+curl -L https://github.com/BastienBYRA/Rolenv/releases/download/v{ROLENV_LATEST_VERSION}/rolenv-darwin-amd64 -o rolenv
+unset ROLENV_LATEST_VERSION
+```
+
+#### Windows
+```powershell
+$ROLENV_LATEST_VERSION = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/BastienBYRA/Rolenv/master/version" -UseBasicParsing | Select-Object -ExpandProperty Content
+$ROLENV_LATEST_VERSION = $ROLENV_LATEST_VERSION.Trim()
+
+$downloadUrl = "https://github.com/BastienBYRA/Rolenv/releases/download/v$ROLENV_LATEST_VERSION/rolenv-windows-amd64"
+Invoke-WebRequest -Uri $downloadUrl -OutFile "rolenv"
+
+Remove-Variable ROLENV_LATEST_VERSION
+```
+
+### From source (Go)
+```bash
+# Build
+go get .
+go build -o rolenv
+
+# Run
+chmod +x rolenv
+./rolenv
+```
+
+## Configuration
 
 Rolenv is launched by running the `rolenv` command. For proper operation, it expects an `*.env` file.
 
@@ -29,16 +79,18 @@ The container definition is done exclusively through the use of environment vari
 | ROLENV_ENTRYPOINT      | ``            | Comma-separated list of strings : `/bin/bash`, `python;app.py`                                    | `--entrypoint`             |
 | ROLENV_COMMAND         | ``            | Comma-separated list of strings : `arg1;arg2`                                                     | `COMMAND`                  |
 | ROLENV_HOSTNAME        | (container ID)| string : `my-hostname`                                                                            | `--hostname`               |
-| ROLENV_PRIVILEGED      | `false`       | boolean : `true`, `false`                                                                         | `--privileged`             |
+| ROLENV_PRIVILEGED      | `false`       | boolean : `true`, `false`, `yes`, `no`                                                            | `--privileged`             |
 | ROLENV_RESTART_POLICY  | `no`          | string : `no`, `on-failure`, `always`, `unless-stopped`                                           | `--restart`                |
 | ROLENV_RESTART_POLICY_MAX_RETRIES | `0` | integer : positive number                                                                         | `--restart-max-attempts`   |
 | ROLENV_USER            | (image default user) | string : `user`, `user:group`, `uid:gid`                                                   | `--user`                   |
-| ROLENV_ENV_LIST        | ``            | All environment variables that do not start with "ROLENV_"                                        | `-e/--env`                 |
 | ROLENV_MEMORY_LIMIT    | `-1` (unlimited)| integer : memory in bytes                                                                         | `--memory`                 |
 | ROLENV_CPU_CORE_LIMIT  | `-1` (unlimited)| integer : number of CPU cores                                                                     | `--cpus`                   |
-| ROLENV_READONLY        | `false`       | boolean : `true`, `false`                                                                         | `--read-only`              |
-| ROLENV_SECURITY_OPTS   | ``            | Comma-separated list of strings : `no-new-privileges;seccomp=unconfined`                          | `--security-opt`           |
+| ROLENV_READONLY        | `false`       | boolean : `true`, `false`, `yes`, `no`                                                              | `--read-only`              |
+| ROLENV_SECURITY_OPTS+   | ``            | Comma-separated list of strings : `no-new-privileges;seccomp=unconfined`                          | `--security-opt`           |
 | ROLENV_VOLUMES         | ``            | Comma-separated list of key-value pairs : `./test:/tmp/test;data-rolenv-test:/a-folder`           | `-v/--volume`              |
+
+### Application environment variables
+All environment variables in the `*.env` file that do not start with ROLENV_ will be added to the container as application environment variables.
 
 ## Start the Program
 

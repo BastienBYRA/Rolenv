@@ -1,0 +1,17 @@
+FROM golang:alpine AS build
+RUN apk add --no-cache git
+WORKDIR /app
+COPY . .
+RUN go mod tidy && \
+    GOOS=linux go build -trimpath -ldflags "-s -w" -o rolenv
+
+FROM docker:cli
+WORKDIR /app
+COPY --from=build /app/rolenv /usr/local/bin/rolenv
+
+LABEL source="https://github.com/BastienBYRA/Rolenv"
+LABEL documentation="https://github.com/BastienBYRA/Rolenv"
+LABEL maintainer="Bastien BYRA <byra.bastien@gmail.com>"
+
+ENTRYPOINT ["/usr/local/bin/rolenv"]
+CMD ["--help"]

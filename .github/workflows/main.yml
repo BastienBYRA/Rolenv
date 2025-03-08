@@ -1,15 +1,85 @@
-name: Build and Release
+name: Test, Build and Release
 
 on:
   push:
     branches:
-      - release
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 permissions:
   contents: write
+  packages: write
+  attestations: write
+  id-token: write
 
 jobs:
-  build:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23.5'
+
+    - name: Install dependencies
+      run: go get .
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Integration tests
+      run: |
+        go build -o rolenv
+        ./rolenv run --config testdata/rolenv.env
+        sleep 5
+        if docker ps | grep rolenv-test-cont; then
+          echo "The container Rolenv is running"
+        else
+          echo "Error, the container is not running" && exit 1
+        fi
+
+  build-image:
+    needs: test
+    if: github.ref == 'refs/heads/release' || github.base_ref == 'refs/heads/release'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from version file
+        id: get_version
+        run: |
+          VERSION=$(cat version)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Log in to the Container registry (GitHub Container Registry)
+        uses: docker/login-action@v3.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6.15.0
+        with:
+          context: .
+          file: "./Dockerfile.host-socket"
+          push: true
+          tags: |
+            ghcr.io/bastienbyra/rolenv:${{ env.VERSION }}
+            ghcr.io/bastienbyra/rolenv:latest
+
+  build-binairies:
+    needs: test
+    if: github.ref == 'refs/heads/release' || github.base_ref == 'refs/heads/release'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -26,10 +96,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v5
       with:
         go-version: '1.23.5'
 
@@ -65,8 +135,9 @@ jobs:
         path: rolenv-${{ matrix.goos }}-${{ matrix.goarch }}
 
   create_release:
-    needs: build
+    needs: build-binairies
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/release' || github.base_ref == 'refs/heads/release'
 
     steps:
     - name: Checkout code
