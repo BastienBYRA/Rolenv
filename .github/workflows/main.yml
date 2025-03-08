@@ -126,6 +126,12 @@ jobs:
         name: rolenv-darwin-amd64
         path: artifacts
 
+    - name: Debug
+      run: |
+        ls artifacts
+        tree artifacts
+      shell: bash
+
     - name: Flatten artifact structure
       run: |
         mkdir -p binaries
