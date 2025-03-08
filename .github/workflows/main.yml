@@ -74,8 +74,8 @@ jobs:
           file: "./Dockerfile.host-socket"
           push: true
           tags: |
-            ghcr.io/bastienbyra/rolenv:${{ env.VERSION }}
-            ghcr.io/bastienbyra/rolenv:latest
+            ghcr.io/bastienbyra/rolenv-host-socket:${{ env.VERSION }}
+            ghcr.io/bastienbyra/rolenv-host-socket:latest
 
   build-binairies:
     needs: test
@@ -146,6 +146,7 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@v4
       with:
+        name: rolenv-*
         path: artifacts
 
     - name: Flatten artifact structure
