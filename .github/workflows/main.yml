@@ -143,16 +143,27 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Download artifacts
+    # Install binaries
+    - name: Download artifacts (Binary Windows)
       uses: actions/download-artifact@v4
       with:
-        name: rolenv-*
+        name: rolenv-windows-amd64
+        path: artifacts
+    - name: Download artifacts (Binary Linux)
+      uses: actions/download-artifact@v4
+      with:
+        name: rolenv-linux-amd64
+        path: artifacts
+    - name: Download artifacts (Binary MacOS)
+      uses: actions/download-artifact@v4
+      with:
+        name: rolenv-darwin-amd64
         path: artifacts
 
     - name: Flatten artifact structure
       run: |
         mkdir -p binaries
-        cp -r artifacts/*/rolenv-* binaries/
+        cp -r artifacts/rolenv-* binaries/
       shell: bash
 
     - name: Extract version from version file
