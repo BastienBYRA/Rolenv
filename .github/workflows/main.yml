@@ -135,7 +135,7 @@ jobs:
     - name: Flatten artifact structure
       run: |
         mkdir -p binaries
-        cp -r artifacts/*/rolenv-* binaries/
+        cp -r artifacts/rolenv-* binaries/
       shell: bash
 
 
